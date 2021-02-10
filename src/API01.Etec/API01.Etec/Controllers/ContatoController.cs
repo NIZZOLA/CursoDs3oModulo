@@ -42,15 +42,13 @@ namespace API01.Etec.Controllers
             return Ok(contatos.Where(a => a.Codigo == id ).FirstOrDefault() );
         }
 
-        /*
-        // GET api/<ContatoController>/5
-        [HttpGet("api/nome/{nome}")]
+        // GET api/<ContatoController>/nome/5
+        [HttpGet("nome/{nome}")]
         public ActionResult<ContatoModel> GetByName(string nome)
         {
-            return Ok(contatos.Where(a => a.Nome == nome).FirstOrDefault());
+            return Ok(contatos.Where(a => a.Nome.ToUpper() == nome.ToUpper() ).FirstOrDefault());
         }
-        */
-
+        
 
         // POST api/<ContatoController>
         [HttpPost]

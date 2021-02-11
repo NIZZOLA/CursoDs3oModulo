@@ -31,6 +31,22 @@ namespace API01.Etec
 
             services.AddDbContext<API01EtecContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("API01EtecContext")));
+
+            services.AddSwaggerGen(c =>
+           {
+               c.SwaggerDoc("v1",
+                   new Microsoft.OpenApi.Models.OpenApiInfo()
+                   {
+                       Title = "Primeira api do curso Desenvolvimento Etec",
+                       Contact = new Microsoft.OpenApi.Models.OpenApiContact()
+                       {
+                           Email = "marcio.nizzola@etec.sp.gov.br",
+                           Name = "Marcio R Nizzola",
+                           Url = new Uri("http://www.etecitu.com.br")
+                       },
+                       Description = "Esta api é um teste"
+                   });
+           });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,6 +66,12 @@ namespace API01.Etec
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Primeira Api ");
             });
         }
     }

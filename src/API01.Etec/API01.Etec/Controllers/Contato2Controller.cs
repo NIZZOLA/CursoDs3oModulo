@@ -39,7 +39,7 @@ namespace API01.Etec.Controllers
                 return NotFound();
             }
 
-            return contatoModel;
+            return Ok(contatoModel);
         }
 
         // PUT: api/Contato2/5

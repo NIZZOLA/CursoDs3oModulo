@@ -12,6 +12,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using API01.Etec.Data;
+using API01.Etec.Service;
+using API01.Etec.Interfaces.Service;
+using API01.Etec.Repository;
+using API01.Etec.Interfaces.Repository;
 
 namespace API01.Etec
 {
@@ -31,6 +35,11 @@ namespace API01.Etec
 
             services.AddDbContext<API01EtecContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("API01EtecContext")));
+
+            #region InjecaoDeDependencia
+            services.AddScoped<IContatoService, ContatoService>();
+            services.AddScoped<IContatoRepository, ContatoRepository>();
+            #endregion
 
             services.AddSwaggerGen(c =>
            {
@@ -67,7 +76,7 @@ namespace API01.Etec
             {
                 endpoints.MapControllers();
             });
-
+            
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {

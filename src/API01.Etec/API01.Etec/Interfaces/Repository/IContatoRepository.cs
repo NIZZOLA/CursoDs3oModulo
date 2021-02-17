@@ -19,5 +19,7 @@ namespace API01.Etec.Interfaces.Repository
         public bool Delete(ContatoModel contato);
 
         public IEnumerable<ContatoModel> GetByPartName(string name);
+
+        public ContatoModel GetByEmail(string email);
     }
 }

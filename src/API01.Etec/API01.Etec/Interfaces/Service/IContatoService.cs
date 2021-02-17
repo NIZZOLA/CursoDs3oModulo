@@ -10,10 +10,8 @@ namespace API01.Etec.Interfaces.Service
     {
         public IEnumerable<ContatoModel> GetAll();
         public ContatoModel GetOne(int id);
-
-
         public ContatoModel Update(ContatoModel contato);
-        public ContatoModel Insert(ContatoModel contato);
+        public object Insert(ContatoModel contato);
 
         public bool Delete(int id);
     }

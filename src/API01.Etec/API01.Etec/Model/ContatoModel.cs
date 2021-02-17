@@ -16,6 +16,5 @@ namespace API01.Etec.Model
         public string Email { get; set; }
 
         public string Telefone { get; set; }
-
     }
 }

@@ -1,6 +1,7 @@
 ﻿using API01.Etec.Interfaces.Repository;
 using API01.Etec.Interfaces.Service;
 using API01.Etec.Model;
+using API01.Etec.ModelValidators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,12 +35,28 @@ namespace API01.Etec.Service
         {
             return _contatoRepository.Update(contato);
         }
-        public ContatoModel Insert(ContatoModel contato)
+        public object Insert(ContatoModel contato)
         {
-            if (contato.Nome == "")
-                return null;
+            var validacao = new ContatoModelValidator().Validate(contato);
+
+            if (!validacao.IsValid)
+            {
+                var erros = validacao.Errors.Select(a => a.ErrorMessage).ToList();
+                return erros;
+            }
+
+
+            if (!this.PermiteIncluir(contato))
+                return "e-mail já existe no cadastro!";
 
             return _contatoRepository.Insert(contato);
+        }
+
+        private bool PermiteIncluir(ContatoModel contato)
+        {
+            var contatoBd = _contatoRepository.GetByEmail(contato.Email);
+            
+            return contatoBd == null;
         }
 
         public bool Delete(int id)

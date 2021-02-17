@@ -73,8 +73,8 @@ namespace API01.Etec.Controllers
         {
             var response = _contatoService.Insert(contatoModel);
 
-            if (response == null)
-                return BadRequest();
+            if( response.GetType() != typeof(ContatoModel) )
+                return BadRequest(response);
 
             return CreatedAtAction("GetContatoModel", new { id = contatoModel.Codigo }, contatoModel);
         }

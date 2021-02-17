@@ -77,5 +77,10 @@ namespace API01.Etec.Repository
         {
             throw new NotImplementedException();
         }
+
+        public ContatoModel GetByEmail(string email)
+        {
+            return _context.ContatoModel.Where(a => a.Email == email).FirstOrDefault();
+        }
     }
 }

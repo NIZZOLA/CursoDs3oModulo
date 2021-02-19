@@ -15,6 +15,9 @@ namespace API01.Etec.ModelValidators
                                 .MaximumLength(100).WithMessage("O campo nome não pode ultrapassar 100 caracteres");
 
             RuleFor(c => c.Email).EmailAddress().WithMessage("O campo e-mail não é válido !");
+
+            RuleFor(c => c.Nascimento).NotEmpty().WithMessage("A data de nascimento é obrigatória")
+                                .LessThan(DateTime.Today).WithMessage("A data de nascimento não pode ser futura !");
         }
     }
 }

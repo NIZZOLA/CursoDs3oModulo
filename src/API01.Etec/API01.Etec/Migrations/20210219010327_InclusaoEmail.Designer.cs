@@ -4,14 +4,16 @@ using API01.Etec.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace API01.Etec.Migrations
 {
     [DbContext(typeof(API01EtecContext))]
-    partial class API01EtecContextModelSnapshot : ModelSnapshot
+    [Migration("20210219010327_InclusaoEmail")]
+    partial class InclusaoEmail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

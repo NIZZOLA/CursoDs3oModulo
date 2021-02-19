@@ -2,6 +2,7 @@
 using API01.Etec.Interfaces.Service;
 using API01.Etec.Model;
 using API01.Etec.ModelValidators;
+using API01.Etec.Validators.BusinessValidator;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,18 +46,15 @@ namespace API01.Etec.Service
                 return erros;
             }
 
+            var businessValidation = new ContatoBusinessValidator(_contatoRepository).Validate(contato);
 
-            if (!this.PermiteIncluir(contato))
-                return "e-mail já existe no cadastro!";
+            if (!businessValidation.IsValid)
+            {
+                var erros = businessValidation.Errors.Select(a => a.ErrorMessage).ToList();
+                return erros;
+            }
 
             return _contatoRepository.Insert(contato);
-        }
-
-        private bool PermiteIncluir(ContatoModel contato)
-        {
-            var contatoBd = _contatoRepository.GetByEmail(contato.Email);
-            
-            return contatoBd == null;
         }
 
         public bool Delete(int id)

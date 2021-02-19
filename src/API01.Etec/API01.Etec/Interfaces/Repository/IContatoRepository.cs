@@ -20,6 +20,8 @@ namespace API01.Etec.Interfaces.Repository
 
         public IEnumerable<ContatoModel> GetByPartName(string name);
 
+        public IEnumerable<ContatoModel> GetByName(string name);
+
         public ContatoModel GetByEmail(string email);
     }
 }

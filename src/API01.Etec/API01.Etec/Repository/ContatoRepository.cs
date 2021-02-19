@@ -82,5 +82,10 @@ namespace API01.Etec.Repository
         {
             return _context.ContatoModel.Where(a => a.Email == email).FirstOrDefault();
         }
+
+        public IEnumerable<ContatoModel> GetByName(string name)
+        {
+            return _context.ContatoModel.Where(a => a.Nome == name).ToList();
+        }
     }
 }

@@ -32,9 +32,31 @@ namespace API01.Etec.Service
         #endregion
 
 
-        public ContatoModel Update(ContatoModel contato)
+        public object Update(ContatoModel contato)
         {
-            return _contatoRepository.Update(contato);
+            var validacao = new ContatoModelValidator().Validate(contato);
+
+            if (!validacao.IsValid)
+            {
+                var erros = validacao.Errors.Select(a => a.ErrorMessage).ToList();
+                return erros;
+            }
+
+            // busca no banco de dados a entidade atrelada do código
+            var contatoDb = _contatoRepository.GetOne(contato.Codigo);
+            if (contatoDb == null)
+            {
+                return new List<string>() { "o código do contato não existe no banco de dados" };
+            }
+
+            // business validation
+
+            contatoDb.Email = contato.Email;
+            contatoDb.Nome = contato.Nome;
+            contatoDb.Nascimento = contato.Nascimento;
+
+            return _contatoRepository.Update(contatoDb);
+
         }
         public object Insert(ContatoModel contato)
         {

@@ -87,5 +87,18 @@ namespace API01.Etec.Repository
         {
             return _context.ContatoModel.Where(a => a.Nome == name).ToList();
         }
+
+        public bool ContactNameExist( int codigo, string name )
+        {
+            var items = _context.ContatoModel.Where(a => a.Nome == name && a.Codigo != codigo ).ToList();
+            //a propriedade Any devolve verdadeiro se a lista tiver algum item
+            return items.Any();
+        }
+
+        public bool ContactEmailExist( int codigo, string email )
+        {
+            // o retorno sendo uma lista, diferente do item acima, podemos usar direto a propriedade Any
+            return _context.ContatoModel.Where(a => a.Email == email && a.Codigo != codigo).Any();
+        }
     }
 }

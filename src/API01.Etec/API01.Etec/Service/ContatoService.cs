@@ -1,4 +1,5 @@
-﻿using API01.Etec.Interfaces.Repository;
+﻿using API01.Etec.Contracts.Post;
+using API01.Etec.Interfaces.Repository;
 using API01.Etec.Interfaces.Service;
 using API01.Etec.Model;
 using API01.Etec.ModelValidators;
@@ -48,18 +49,21 @@ namespace API01.Etec.Service
             {
                 return new List<string>() { "o código do contato não existe no banco de dados" };
             }
-
+            
             // business validation
 
             contatoDb.Email = contato.Email;
             contatoDb.Nome = contato.Nome;
             contatoDb.Nascimento = contato.Nascimento;
+            
 
-            return _contatoRepository.Update(contatoDb);
+            return _contatoRepository.Update(contato);
 
         }
-        public object Insert(ContatoModel contato)
+        public object Insert(ContatoPostRequest contatoRequest)
         {
+            var contato = new ContatoModel() { Email = contatoRequest.Email, Nascimento = contatoRequest.Nascimento, Nome = contatoRequest.Nome, Telefone = contatoRequest.Telefone };
+
             var validacao = new ContatoModelValidator().Validate(contato);
 
             if (!validacao.IsValid)

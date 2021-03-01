@@ -1,4 +1,5 @@
-﻿using API01.Etec.Model;
+﻿using API01.Etec.Contracts.Post;
+using API01.Etec.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace API01.Etec.Interfaces.Service
         public IEnumerable<ContatoModel> GetAll();
         public ContatoModel GetOne(int id);
         public object Update(ContatoModel contato);
-        public object Insert(ContatoModel contato);
+        public object Insert(ContatoPostRequest contato);
 
         public bool Delete(int id);
     }

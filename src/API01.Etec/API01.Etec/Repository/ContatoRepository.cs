@@ -30,6 +30,7 @@ namespace API01.Etec.Repository
 
         public ContatoModel Update(ContatoModel contato)
         {
+            DetachLocal(a => a.Codigo == contato.Codigo);
             _context.Entry(contato).State = EntityState.Modified;
 
             try
@@ -52,7 +53,7 @@ namespace API01.Etec.Repository
                 _context.SaveChangesAsync();
                 return contato;
             }
-            catch (Exception)
+            catch (Exception error)
             {
                 return null;
             }
@@ -99,6 +100,15 @@ namespace API01.Etec.Repository
         {
             // o retorno sendo uma lista, diferente do item acima, podemos usar direto a propriedade Any
             return _context.ContatoModel.Where(a => a.Email == email && a.Codigo != codigo).Any();
+        }
+
+        public void DetachLocal(Func<ContatoModel,bool> predicate)
+        {
+            var local = _context.Set<ContatoModel>().Local.Where(predicate).FirstOrDefault();
+            if(local != null)
+            {
+                _context.Entry(local).State = EntityState.Detached;
+            }
         }
     }
 }

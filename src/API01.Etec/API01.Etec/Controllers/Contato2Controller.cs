@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using API01.Etec.Data;
 using API01.Etec.Model;
 using API01.Etec.Interfaces.Service;
+using API01.Etec.Contracts.Post;
 
 namespace API01.Etec.Controllers
 {
@@ -69,14 +70,16 @@ namespace API01.Etec.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public ActionResult<ContatoModel> PostContatoModel(ContatoModel contatoModel)
+        public ActionResult<ContatoModel> PostContatoModel(ContatoPostRequest contatoModel)
         {
             var response = _contatoService.Insert(contatoModel);
 
             if( response.GetType() != typeof(ContatoModel) )
                 return BadRequest(response);
+            
+            var resposta = (ContatoModel)response;
 
-            return CreatedAtAction("GetContatoModel", new { id = contatoModel.Codigo }, contatoModel);
+            return CreatedAtAction("GetContatoModel", new { id = resposta.Codigo }, resposta);
         }
 
         // DELETE: api/Contato2/5

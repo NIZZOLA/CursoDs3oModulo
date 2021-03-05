@@ -1,6 +1,8 @@
 using API01.Etec.Model;
 using API01.Etec.ModelValidators;
+using API01.Etec.Validators.ValidationHelpers;
 using System;
+using System.Linq;
 using Xunit;
 
 namespace API01.EtecTests
@@ -41,9 +43,11 @@ namespace API01.EtecTests
             var result = validador.Validate(contato);
 
             Assert.False(result.IsValid);
+            var erros = result.Errors.Select(a => a.ErrorMessage).ToList();
+            Assert.True(erros.Contains(ContatoModelErrorMessages.EmailInvalido) == true);
         }
 
-        [Theory(DisplayName = "Teste de datas de nascimento")]
+        [Theory(DisplayName = "Teste de datas de nascimento validas")]
         [InlineData("01/01/2020")]
         [InlineData("01/01/1980")]
         public void DataDeveSerValida(string dataStr)
@@ -55,7 +59,7 @@ namespace API01.EtecTests
             Assert.True(result.IsValid);
         }
 
-        [Theory(DisplayName = "Teste de datas de nascimento")]
+        [Theory(DisplayName = "Teste de datas de nascimento invalidas")]
         [InlineData("01/01/2022")]
         [InlineData("01/01/4400")]
         public void DataDeveSerInValida(string dataStr)
@@ -65,6 +69,9 @@ namespace API01.EtecTests
             var result = validador.Validate(contato);
 
             Assert.False(result.IsValid);
+            var erros = result.Errors.Select(a => a.ErrorMessage).ToList();
+            Assert.True(erros.Contains(ContatoModelErrorMessages.DataDeNascimentoNaoPodeSerFutura) == true );
+            
         }
     }
 }

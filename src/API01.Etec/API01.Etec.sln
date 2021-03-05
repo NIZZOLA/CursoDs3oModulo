@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API01.Etec", "API01.Etec\API01.Etec.csproj", "{5DCAA4AD-13BB-4DEF-A294-429DBF224706}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API01.EtecTests", "API01.EtecTests\API01.EtecTests.csproj", "{E7F8D356-54E7-490B-81A2-404D7E35F557}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API01.EtecTests", "API01.EtecTests\API01.EtecTests.csproj", "{E7F8D356-54E7-490B-81A2-404D7E35F557}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

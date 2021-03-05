@@ -14,5 +14,6 @@ namespace API01.Etec.Contracts.Post
         public string Telefone { get; set; }
 
         public DateTime Nascimento { get; set; }
+
     }
 }

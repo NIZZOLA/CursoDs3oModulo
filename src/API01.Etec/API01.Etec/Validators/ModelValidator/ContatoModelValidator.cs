@@ -1,4 +1,5 @@
 ﻿using API01.Etec.Model;
+using API01.Etec.Validators.ValidationHelpers;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -11,13 +12,16 @@ namespace API01.Etec.ModelValidators
     {
         public ContatoModelValidator()
         {
-            RuleFor(c => c.Nome).NotEmpty().WithMessage("O campo nome não pode ser vazio !")
-                                .MaximumLength(100).WithMessage("O campo nome não pode ultrapassar 100 caracteres");
+            RuleFor(c => c.Nome).NotEmpty().WithMessage(ContatoModelErrorMessages.NomeNaoVazio)
+                                .MaximumLength(50).WithMessage(ContatoModelErrorMessages.NomeExcedeuTamanhoMaximo);
 
-            RuleFor(c => c.Email).EmailAddress().WithMessage("O campo e-mail não é válido !");
+            RuleFor(c => c.Email).EmailAddress().WithMessage(ContatoModelErrorMessages.EmailInvalido)
+                        .MaximumLength(80).WithMessage(ContatoModelErrorMessages.EmailExcedeuTamanhoMaximo);
 
-            RuleFor(c => c.Nascimento).NotEmpty().WithMessage("A data de nascimento é obrigatória")
-                                .LessThan(DateTime.Today).WithMessage("A data de nascimento não pode ser futura !");
+            RuleFor(c => c.Telefone).MaximumLength(15).WithMessage(ContatoModelErrorMessages.TelefoneExcedeuTamanhoMaximo);
+
+            RuleFor(c => c.Nascimento).NotEmpty().WithMessage(ContatoModelErrorMessages.DataDeNascimentoObrigatória)
+                                .LessThan(DateTime.Today).WithMessage(ContatoModelErrorMessages.DataDeNascimentoNaoPodeSerFutura);
         }
     }
 }

@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API01.Etec.ExtensionMethods;
 
 namespace API01.Etec.Service
 {
@@ -62,7 +63,8 @@ namespace API01.Etec.Service
         }
         public object Insert(ContatoPostRequest contatoRequest)
         {
-            var contato = new ContatoModel() { Email = contatoRequest.Email, Nascimento = contatoRequest.Nascimento, Nome = contatoRequest.Nome, Telefone = contatoRequest.Telefone };
+            //var contato = new ContatoModel() { Email = contatoRequest.Email, Nascimento = contatoRequest.Nascimento, Nome = contatoRequest.Nome, Telefone = contatoRequest.Telefone };
+            var contato = contatoRequest.ToContatoModel();
 
             var validacao = new ContatoModelValidator().Validate(contato);
 

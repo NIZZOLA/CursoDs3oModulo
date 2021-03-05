@@ -14,10 +14,13 @@ namespace API01.Etec.Model
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Codigo { get; set; }
 
+        [MaxLength(50)]
         public string Nome { get; set; }
 
+        [MaxLength(80)]
         public string Email { get; set; }
 
+        [MaxLength(15)]
         public string Telefone { get; set; }
 
         public DateTime Nascimento { get; set; }

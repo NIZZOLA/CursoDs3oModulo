@@ -16,13 +16,15 @@ namespace API01.Etec.Interfaces.Repository
 
         public ContatoModel Insert(ContatoModel contato);
 
+        public IEnumerable<ContatoModel> GetByIdade(int idade);
+
         public bool Delete(ContatoModel contato);
 
         public IEnumerable<ContatoModel> GetByPartName(string name);
 
-        public IEnumerable<ContatoModel> GetByName(string name);
+        public IEnumerable<ContatoModel> GetByName(string name, int excluirContatoId = 0);
 
-        public ContatoModel GetByEmail(string email);
+        public ContatoModel GetByEmail(string email, int excluirContatoId = 0);
 
         public bool ContactNameExist(int codigo, string name);
 

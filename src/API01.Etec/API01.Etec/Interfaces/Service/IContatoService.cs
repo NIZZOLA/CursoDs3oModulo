@@ -11,6 +11,10 @@ namespace API01.Etec.Interfaces.Service
     {
         public IEnumerable<ContatoModel> GetAll();
         public ContatoModel GetOne(int id);
+        public ContatoModel GetByEmail(string email);
+
+        public IEnumerable<ContatoModel> GetByIdade(int idade);
+
         public object Update(ContatoModel contato);
         public object Insert(ContatoPostRequest contato);
 

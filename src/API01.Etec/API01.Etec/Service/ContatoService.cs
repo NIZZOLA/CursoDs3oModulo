@@ -50,13 +50,15 @@ namespace API01.Etec.Service
             {
                 return new List<string>() { "o código do contato não existe no banco de dados" };
             }
-            
-            // business validation
 
-            contatoDb.Email = contato.Email;
-            contatoDb.Nome = contato.Nome;
-            contatoDb.Nascimento = contato.Nascimento;
-            
+            // business validation
+            var businessValidation = new ContatoBusinessValidator(_contatoRepository).Validate(contato);
+
+            if (!businessValidation.IsValid)
+            {
+                var erros = businessValidation.Errors.Select(a => a.ErrorMessage).ToList();
+                return erros;
+            }
 
             return _contatoRepository.Update(contato);
 
@@ -64,6 +66,7 @@ namespace API01.Etec.Service
         public object Insert(ContatoPostRequest contatoRequest)
         {
             //var contato = new ContatoModel() { Email = contatoRequest.Email, Nascimento = contatoRequest.Nascimento, Nome = contatoRequest.Nome, Telefone = contatoRequest.Telefone };
+            // a linha abaixo substitui criando um ExtensionMethod 
             var contato = contatoRequest.ToContatoModel();
 
             var validacao = new ContatoModelValidator().Validate(contato);
@@ -92,6 +95,16 @@ namespace API01.Etec.Service
                 return false;
 
             return _contatoRepository.Delete(obj);
+        }
+
+        public ContatoModel GetByEmail(string email)
+        {
+            return _contatoRepository.GetByEmail(email);
+        }
+
+        public IEnumerable<ContatoModel> GetByIdade(int idade)
+        {
+            return _contatoRepository.GetByIdade(idade);
         }
     }
 }

@@ -12,9 +12,9 @@ namespace API01.Etec.Validators.BusinessValidator
     {
         public ContatoBusinessValidator(IContatoRepository contatoRep)
         {
-            RuleFor(cx => cx.Nome).Must(nome => contatoRep.GetByName(nome).Count() == 0).WithMessage("O nome não pode ser repetido !");
+            RuleFor(cx => cx).Must(entidade => contatoRep.GetByName(entidade.Nome, entidade.Codigo).Count() == 0).WithMessage("O nome não pode ser repetido !");
 
-            RuleFor(a => a.Email).Must(email => contatoRep.GetByEmail(email) == null).WithMessage("O E-mail já encontra-se cadastrado !");
+            RuleFor(a => a).Must(entidade => contatoRep.GetByEmail(entidade.Email, entidade.Codigo ) == null).WithMessage("O E-mail já encontra-se cadastrado !");
         }
     }
 }

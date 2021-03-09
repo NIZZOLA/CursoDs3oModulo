@@ -31,6 +31,13 @@ namespace API01.Etec.Controllers
             return Ok(_contatoService.GetAll());
         }
 
+        // GET: api/Contato2/idade/{idade}
+        [HttpGet("idade/{idade}")]
+        public ActionResult<IEnumerable<ContatoModel>> GetByIdade(int idade)
+        {
+            return Ok(_contatoService.GetByIdade(idade));
+        }
+
         // GET: api/Contato2/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ContatoModel>> GetContatoModel(int id)
@@ -38,9 +45,22 @@ namespace API01.Etec.Controllers
             var contatoModel = _contatoService.GetOne(id);
 
             if (contatoModel == null)
-            {
                 return NotFound();
-            }
+            
+            return Ok(contatoModel);
+        }
+
+        // GET: api/Contato/Email/{email}
+        [HttpGet("email/{email}")]
+        public async Task<ActionResult<ContatoModel>> GetContatoModelByEmail( string email )
+        {
+            if (email == "")
+                return BadRequest();
+            
+            var contatoModel = _contatoService.GetByEmail(email);
+
+            if (contatoModel == null)
+                return NotFound();
 
             return Ok(contatoModel);
         }
@@ -52,17 +72,13 @@ namespace API01.Etec.Controllers
         public ActionResult<ContatoModel> PutContatoModel(int id, ContatoModel contatoModel)
         {
             if (id != contatoModel.Codigo)
-            {
                 return BadRequest();
-            }
-
+            
             var response = _contatoService.Update(contatoModel);
 
             if (response == null)
-            {
                 return NotFound();
-            }
-
+            
             return Ok(response);
         }
 
@@ -88,10 +104,8 @@ namespace API01.Etec.Controllers
         {
             var contatoModel = _contatoService.GetOne(id);
             if (contatoModel == null)
-            {
                 return NotFound();
-            }
-
+            
             if (!_contatoService.Delete(id))
                 return BadRequest();
 

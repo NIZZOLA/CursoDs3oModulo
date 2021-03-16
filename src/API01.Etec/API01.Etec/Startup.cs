@@ -33,6 +33,17 @@ namespace API01.Etec
         {
             services.AddControllers();
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllOrigins", config =>
+                     config.AllowAnyOrigin()
+                           .AllowAnyMethod()
+                           .AllowAnyHeader()
+                           // .AllowCredentials()
+                           .Build()
+                );
+            });
+
             services.AddDbContext<API01EtecContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("API01EtecContext")));
 
@@ -69,6 +80,8 @@ namespace API01.Etec
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors("AllowAllOrigins");
 
             app.UseAuthorization();
 

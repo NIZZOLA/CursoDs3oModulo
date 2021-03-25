@@ -1,0 +1,32 @@
+﻿@model WebApiLogin.Models.UsuarioModel
+
+@{
+    ViewData["Title"] = "Logout";
+}
+
+<h1>Logout</h1>
+
+<h4>UsuarioModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Logout">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="text-danger">@ViewData["Message"] @Html.ValidationSummary(false, "", new { @class = "text-danger" }) </div>
+            <input type="hidden" asp-for="Id" />
+            
+            <div class="form-group">
+                <input type="submit" value="Fazer Logout" class="btn btn-danger" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Voltar para Home</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

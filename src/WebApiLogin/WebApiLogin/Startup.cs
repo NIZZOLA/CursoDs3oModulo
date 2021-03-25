@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using WebApiLogin.Models;
 
 namespace WebApiLogin
 {
@@ -23,6 +24,15 @@ namespace WebApiLogin
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            
+            services.AddAuthentication("CookieAuthentication")
+                .AddCookie("CookieAuthentication", config =>
+                {
+                    config.Cookie.Name = ProjectConstants.CookieLoginUsuario;
+                    config.LoginPath = "/Usuario/Login";
+                    config.AccessDeniedPath = "/Usuario/LoginInvalido";
+                });
+            
             services.AddControllersWithViews();
 
             services.AddDbContext<ApiLoginContext>(options =>
@@ -43,6 +53,8 @@ namespace WebApiLogin
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

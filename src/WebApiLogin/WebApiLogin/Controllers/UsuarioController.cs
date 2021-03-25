@@ -1,29 +1,39 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiLogin.Models;
+using WebApiLogin.Services;
 
 namespace WebApiLogin.Controllers
 {
-    public class UsuarioController : Controller
+    public class UsuarioController : ControllerPai
     {
         private readonly ApiLoginContext _context;
 
         public UsuarioController(ApiLoginContext context)
         {
             _context = context;
+            
         }
 
         // GET: Usuario
+        [Authorize]
         public async Task<IActionResult> Index()
         {
+            Autenticar();
             return View(await _context.UsuarioModel.ToListAsync());
         }
 
         // GET: Usuario/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            Autenticar();
+
             if (id == null)
             {
                 return NotFound();
@@ -156,6 +166,8 @@ namespace WebApiLogin.Controllers
         // GET: Usuario/Create
         public IActionResult Login(UsuarioModel user)
         {
+            Autenticar();
+
             ModelState["Id"].Errors.Clear();
 
             // verificar se existe o usuário e a senha é igual
@@ -175,10 +187,49 @@ namespace WebApiLogin.Controllers
             }
 
             /* criar cookies */
-
+            var userClaims = new List<Claim>()
+                {
+                    //define o cookie
+                    new Claim(ClaimTypes.Name, user.NomeUsuario),
+                    new Claim(ClaimTypes.Email, "marcio@teste.com"),
+                };
             
+            var minhaIdentity = new ClaimsIdentity(userClaims, "Usuario");
+            var userPrincipal = new ClaimsPrincipal(new[] { minhaIdentity });
+            //cria o cookie
+            HttpContext.SignInAsync(userPrincipal);
 
             return RedirectToAction("Index", "Usuario" );
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Logout()
+        {
+            Autenticar();
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Logout(UsuarioModel usuarioTeste)
+        {
+            var usuario = "Anônimo";
+            var autenticado = false;
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                usuario = HttpContext.User.Identity.Name;
+                autenticado = true;
+            }
+            else
+            {
+                usuario = "Não Logado";
+                autenticado = false;
+            }
+
+            ViewBag.usuario = usuario;
+            ViewBag.autenticado = autenticado;
+
+            await HttpContext.SignOutAsync();
+            return RedirectToAction("Index", "Home");
         }
 
     }

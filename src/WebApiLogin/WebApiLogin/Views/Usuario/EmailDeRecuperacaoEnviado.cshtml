@@ -1,0 +1,27 @@
+﻿@model WebApiLogin.Models.UsuarioModel
+
+@{
+    ViewData["Title"] = "Forget";
+}
+
+<h1>Recuperar a senha</h1>
+
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+
+        <h2>Uma mensagem foi enviada para o e-mail que você indicou</h2>
+
+        <p>Neste e-mail haverão instruções para recuperação da sua senha !</p>
+
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

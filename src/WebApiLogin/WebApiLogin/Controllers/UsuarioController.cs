@@ -6,18 +6,22 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using WebApiLogin.Models;
 using WebApiLogin.Services;
+using WebApiLogin.ViewModels;
 
 namespace WebApiLogin.Controllers
 {
     public class UsuarioController : ControllerPai
     {
         private readonly ApiLoginContext _context;
+        private readonly WebsiteEmailSettings _emailSettings;
 
-        public UsuarioController(ApiLoginContext context)
+        public UsuarioController(ApiLoginContext context, IOptions<WebsiteEmailSettings> emailSettings)
         {
             _context = context;
+            _emailSettings = emailSettings.Value;
         }
 
         // GET: Usuario
@@ -61,7 +65,7 @@ namespace WebApiLogin.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,NomeUsuario,Senha")] UsuarioModel usuarioModel)
+        public async Task<IActionResult> Create([Bind("Id,NomeUsuario,Senha,Email")] UsuarioModel usuarioModel)
         {
             if (ModelState.IsValid)
             {
@@ -96,7 +100,7 @@ namespace WebApiLogin.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,NomeUsuario,Senha")] UsuarioModel usuarioModel)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,NomeUsuario,Senha,Email")] UsuarioModel usuarioModel)
         {
             if (id != usuarioModel.Id)
             {
@@ -227,5 +231,36 @@ namespace WebApiLogin.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Forget()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Forget(UsuarioRecuperarSenha data)
+        {
+            if (data.Email == null)
+                return BadRequest();
+
+            var usuarioModel =  _context.UsuarioModel.Where(a => a.Email == data.Email).FirstOrDefault();
+            if (usuarioModel == null)
+            {
+                return NotFound();
+            }
+
+            // enviar o e-mail 
+            var emailService = new EmailService(_emailSettings);
+            if (emailService.SendEmail("marcio.nizzola@etec.sp.gov.br", "Mensagem de Recuperação do seu Email", "the book is on the table "))
+                return RedirectToAction("EmailDeRecuperacaoEnviado", "Usuario");
+
+            // falta tratar o erro
+            return View(usuarioModel);
+        }
+
+        public async Task<IActionResult> EmailDeRecuperacaoEnviado()
+        {
+            return View();
+        }
     }
 }

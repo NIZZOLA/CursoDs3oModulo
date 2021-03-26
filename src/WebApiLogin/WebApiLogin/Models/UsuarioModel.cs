@@ -18,6 +18,10 @@ namespace WebApiLogin.Models
         [DataType(System.ComponentModel.DataAnnotations.DataType.Password)]
         public string Senha { get; set; }
 
+        [MaxLength(80)]
+        [Display(Name = "Endereço de Email")]
+        public string Email { get; set; }
+
         [ScaffoldColumn(false)]
         public bool Ativo { get; set; }
 

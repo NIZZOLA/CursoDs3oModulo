@@ -18,18 +18,18 @@ namespace WebApiLogin.Controllers
         public UsuarioController(ApiLoginContext context)
         {
             _context = context;
-            
         }
 
         // GET: Usuario
         [Authorize]
         public async Task<IActionResult> Index()
         {
-            Autenticar();
+            this.Autenticar();
             return View(await _context.UsuarioModel.ToListAsync());
         }
 
         // GET: Usuario/Details/5
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             Autenticar();
@@ -50,6 +50,7 @@ namespace WebApiLogin.Controllers
         }
 
         // GET: Usuario/Create
+        [Authorize]
         public IActionResult Create()
         {
             return View();
@@ -64,6 +65,7 @@ namespace WebApiLogin.Controllers
         {
             if (ModelState.IsValid)
             {
+                usuarioModel.Senha = SecurityService.Criptografar(usuarioModel.Senha);
                 _context.Add(usuarioModel);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -72,6 +74,7 @@ namespace WebApiLogin.Controllers
         }
 
         // GET: Usuario/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -91,6 +94,7 @@ namespace WebApiLogin.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,NomeUsuario,Senha")] UsuarioModel usuarioModel)
         {
@@ -103,6 +107,7 @@ namespace WebApiLogin.Controllers
             {
                 try
                 {
+
                     _context.Update(usuarioModel);
                     await _context.SaveChangesAsync();
                 }
@@ -123,6 +128,7 @@ namespace WebApiLogin.Controllers
         }
 
         // GET: Usuario/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -143,6 +149,7 @@ namespace WebApiLogin.Controllers
         // POST: Usuario/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var usuarioModel = await _context.UsuarioModel.FindAsync(id);
@@ -179,7 +186,7 @@ namespace WebApiLogin.Controllers
                 return View(user);
             }
 
-            if( usuarioModel.Senha != user.Senha )
+            if( usuarioModel.Senha != SecurityService.Criptografar(user.Senha))
             {
                 // ViewData["Message"] = "Senha inválida.";
                 ModelState.AddModelError("Senha", "Senha inválida !");
@@ -203,6 +210,7 @@ namespace WebApiLogin.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Logout()
         {
             Autenticar();
@@ -210,23 +218,10 @@ namespace WebApiLogin.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Logout(UsuarioModel usuarioTeste)
         {
-            var usuario = "Anônimo";
-            var autenticado = false;
-            if (HttpContext.User.Identity.IsAuthenticated)
-            {
-                usuario = HttpContext.User.Identity.Name;
-                autenticado = true;
-            }
-            else
-            {
-                usuario = "Não Logado";
-                autenticado = false;
-            }
-
-            ViewBag.usuario = usuario;
-            ViewBag.autenticado = autenticado;
+            Autenticar();
 
             await HttpContext.SignOutAsync();
             return RedirectToAction("Index", "Home");

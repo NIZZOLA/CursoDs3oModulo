@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using API01.Etec.Data;
 using API01.Etec.Model;
+using API01.Etec.Interfaces.Service;
 
 namespace API01.Etec.Controllers
 {
@@ -14,25 +15,26 @@ namespace API01.Etec.Controllers
     [ApiController]
     public class Contato2Controller : ControllerBase
     {
-        private readonly API01EtecContext _context;
+        private readonly IContatoService _contatoService;
 
-        public Contato2Controller(API01EtecContext context)
+
+        public Contato2Controller(IContatoService contatoService)
         {
-            _context = context;
+            _contatoService = contatoService;
         }
 
         // GET: api/Contato2
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ContatoModel>>> GetContatoModel()
+        public ActionResult<IEnumerable<ContatoModel>> GetContatoModel()
         {
-            return await _context.ContatoModel.ToListAsync();
+            return Ok(_contatoService.GetAll());
         }
 
         // GET: api/Contato2/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ContatoModel>> GetContatoModel(int id)
         {
-            var contatoModel = await _context.ContatoModel.FindAsync(id);
+            var contatoModel = _contatoService.GetOne(id);
 
             if (contatoModel == null)
             {
@@ -46,65 +48,52 @@ namespace API01.Etec.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutContatoModel(int id, ContatoModel contatoModel)
+        public ActionResult<ContatoModel> PutContatoModel(int id, ContatoModel contatoModel)
         {
             if (id != contatoModel.Codigo)
             {
                 return BadRequest();
             }
 
-            _context.Entry(contatoModel).State = EntityState.Modified;
+            var response = _contatoService.Update(contatoModel);
 
-            try
+            if (response == null)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ContatoModelExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
 
-            return NoContent();
+            return Ok(response);
         }
 
         // POST: api/Contato2
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<ContatoModel>> PostContatoModel(ContatoModel contatoModel)
+        public ActionResult<ContatoModel> PostContatoModel(ContatoModel contatoModel)
         {
-            _context.ContatoModel.Add(contatoModel);
-            await _context.SaveChangesAsync();
+            var response = _contatoService.Insert(contatoModel);
+
+            if (response == null)
+                return BadRequest();
 
             return CreatedAtAction("GetContatoModel", new { id = contatoModel.Codigo }, contatoModel);
         }
 
         // DELETE: api/Contato2/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<ContatoModel>> DeleteContatoModel(int id)
+        public  ActionResult<ContatoModel> DeleteContatoModel(int id)
         {
-            var contatoModel = await _context.ContatoModel.FindAsync(id);
+            var contatoModel = _contatoService.GetOne(id);
             if (contatoModel == null)
             {
                 return NotFound();
             }
 
-            _context.ContatoModel.Remove(contatoModel);
-            await _context.SaveChangesAsync();
+            if (!_contatoService.Delete(id))
+                return BadRequest();
 
-            return contatoModel;
+            return Ok();
         }
 
-        private bool ContatoModelExists(int id)
-        {
-            return _context.ContatoModel.Any(e => e.Codigo == id);
-        }
     }
 }

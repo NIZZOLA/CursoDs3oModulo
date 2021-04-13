@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using API01.Etec.Data;
 using API01.Etec.Model;
 using API01.Etec.Interfaces.Service;
+using Microsoft.Extensions.Logging;
+using System.Text.Json;
 
 namespace API01.Etec.Controllers
 {
@@ -16,11 +18,13 @@ namespace API01.Etec.Controllers
     public class Contato2Controller : ControllerBase
     {
         private readonly IContatoService _contatoService;
+        private readonly ILogger _logger;
 
 
-        public Contato2Controller(IContatoService contatoService)
+        public Contato2Controller(IContatoService contatoService, ILogger<ContatoModel> logger)
         {
             _contatoService = contatoService;
+            _logger = logger;
         }
 
         // GET: api/Contato2
@@ -52,6 +56,7 @@ namespace API01.Etec.Controllers
         {
             if (id != contatoModel.Codigo)
             {
+                _logger.LogWarning("Bad Request Recebido - " + JsonSerializer.Serialize(contatoModel));
                 return BadRequest();
             }
 
@@ -71,8 +76,14 @@ namespace API01.Etec.Controllers
         [HttpPost]
         public ActionResult<ContatoModel> PostContatoModel(ContatoModel contatoModel)
         {
-            var response = _contatoService.Insert(contatoModel);
+            string nome;
 
+            if (string.IsNullOrEmpty(contatoModel.Nome))
+            {
+                _logger.LogWarning("Bad Request Recebido");
+            }
+
+            var response = _contatoService.Insert(contatoModel);
             if (response == null)
                 return BadRequest();
 
@@ -81,7 +92,7 @@ namespace API01.Etec.Controllers
 
         // DELETE: api/Contato2/5
         [HttpDelete("{id}")]
-        public  ActionResult<ContatoModel> DeleteContatoModel(int id)
+        public ActionResult<ContatoModel> DeleteContatoModel(int id)
         {
             var contatoModel = _contatoService.GetOne(id);
             if (contatoModel == null)

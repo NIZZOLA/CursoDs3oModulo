@@ -1,5 +1,6 @@
 ﻿using API01.Etec.Model;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -16,9 +17,12 @@ namespace API01.Etec.Controllers
     public class ContatoController : ControllerBase
     {
         public ICollection<ContatoModel> contatos;
+        private readonly ILogger _logger;
 
-        public ContatoController()
+        public ContatoController(ILogger<ContatoModel> logger)
         {
+            _logger = logger;
+
             contatos = new List<ContatoModel>();
             contatos.Add(new ContatoModel() { Codigo = 1, Nome = "KAYLLANY" });
             contatos.Add(new ContatoModel() { Codigo = 2, Nome = "KAYKY" });
